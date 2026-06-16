@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,29 +12,30 @@ namespace AccountManager.Infrastructure.Repositories;
 [SuppressMessage("ReSharper", "RedundantAnonymousTypePropertyName")]
 public class AccountRepository(string connectionString)
 {
-    public async Task Add(User user)
+    public async Task<bool> Add(Account account)
     {
         await using var connection = new NpgsqlConnection(connectionString);
         await connection.OpenAsync();
         await using var transaction = await connection.BeginTransactionAsync();
 
+        var affectedRows = 0;
+        
         try
         {
-            await connection.ExecuteAsync(
+            affectedRows = await connection.ExecuteAsync(
                 sql: """
-                     INSERT INTO table_users(id, email, role) 
-                     VALUES (@Id, @Email, @Role);
+                     INSERT INTO table_accounts(email, role) 
+                     VALUES (@Email, @Role);
 
-                     INSERT INTO table_passwords(password, user_id)
-                     VALUES (@Password, @UserId)
+                     INSERT INTO table_passwords(password, account_email)
+                     VALUES (@Password, @AccountEmail)
                      """,
                 param: new
                 {
-                    Id = user.Id,
-                    Email = user.Email.Value,
-                    Role = user.Role,
-                    Password = user.Password.Value,
-                    UserId = user.Id
+                    Email = account.Email.Value,
+                    Role = account.Role,
+                    Password = account.Password.Value,
+                    AccountEmail = account.Email.Value
                 },
                 transaction
             );
@@ -46,49 +46,49 @@ public class AccountRepository(string connectionString)
         {
             await transaction.RollbackAsync();
         }
+
+        return affectedRows > 0;
     }
 
-    public async Task<User?> GetById(Guid id)
+    public async Task<Account?> GetByEmail(Email email)
     {
         await using var connection = new NpgsqlConnection(connectionString);
 
         var row = await connection.QueryFirstOrDefaultAsync(
             sql: """
-                 SELECT table_users.id, table_users.email, table_users.role, table_passwords.password 
-                 FROM table_users
-                 JOIN table_passwords ON table_users.id = table_passwords.user_id
-                 WHERE table_users.id = @Id AND table_users.is_deleted = FALSE;
+                 SELECT table_accounts.email, table_accounts.role, table_passwords.password 
+                 FROM table_accounts
+                 JOIN table_passwords ON table_accounts.email = table_passwords.account_email
+                 WHERE table_accounts.email = @Email AND table_accounts.is_deleted = FALSE;
                  """,
-            param: new { Id = id }
+            param: new { Email = email.Value }
         );
 
         if (row is null) return null;
 
-        return new User
+        return new Account
         {
-            Id = row.id,
             Email = new Email { Value = row.email },
             Password = new Password { Value = row.password },
             Role = row.role
         };
     }
 
-    public async Task<IEnumerable<User>> GetAll()
+    public async Task<IEnumerable<Account>> GetAll()
     {
         await using var connection = new NpgsqlConnection(connectionString);
 
         var rows = await connection.QueryAsync(
             sql: """
-                 SELECT table_users.id, table_users.email, table_users.role, table_passwords.password 
-                 FROM table_users
-                 JOIN table_passwords ON table_users.id = table_passwords.user_id
+                 SELECT table_accounts.email, table_accounts.role, table_passwords.password 
+                 FROM table_accounts
+                 JOIN table_passwords ON table_accounts.email = table_passwords.account_email
                  """
         );
 
         return rows.Select(row =>
-            new User
+            new Account
             {
-                Id = row.id,
                 Email = new Email { Value = row.email },
                 Password = new Password { Value = row.password },
                 Role = row.role
@@ -96,31 +96,32 @@ public class AccountRepository(string connectionString)
         ).ToList();
     }
 
-    public async Task Update(User newUser)
+    public async Task<bool> Update(Account newAccount)
     {
         await using var connection = new NpgsqlConnection(connectionString);
         await connection.OpenAsync();
         await using var transaction = await connection.BeginTransactionAsync();
 
+        var affectedRows = 0;
+        
         try
         {
-            await connection.ExecuteAsync(
+            affectedRows = await connection.ExecuteAsync(
                 sql: """
-                     UPDATE table_users
+                     UPDATE table_accounts
                      SET email = @Email, role = @Role
-                     WHERE id = @Id;
+                     WHERE email = @Email;
 
                      UPDATE table_passwords
                      SET password = @Password
-                     WHERE user_id = @UserId;
+                     WHERE account_email = @AccountEmail;
                      """,
                 param: new
                 {
-                    Email = newUser.Email.Value,
-                    Role = newUser.Role,
-                    Id = newUser.Id,
-                    Password = newUser.Password.Value,
-                    UserId = newUser.Id
+                    Email = newAccount.Email.Value,
+                    Role = newAccount.Role,
+                    Password = newAccount.Password.Value,
+                    AccountEmail = newAccount.Email.Value,
                 },
                 transaction
             );
@@ -131,18 +132,22 @@ public class AccountRepository(string connectionString)
         {
             await transaction.RollbackAsync();
         }
+
+        return affectedRows > 0;
     }
 
-    public async Task Delete(User user)
+    public async Task<bool> Delete(Account account)
     {
         await using var connection = new NpgsqlConnection(connectionString);
 
-        await connection.ExecuteAsync(
+        var affectedRows = await connection.ExecuteAsync(
             sql: """
-                 DELETE FROM table_users
-                 WHERE id = @Id 
+                 DELETE FROM table_accounts
+                 WHERE email = @Email 
                  """,
-            param: new { Id = user.Id }
+            param: new { Email = account.Email.Value }
         );
+
+        return affectedRows > 0;
     }
 }

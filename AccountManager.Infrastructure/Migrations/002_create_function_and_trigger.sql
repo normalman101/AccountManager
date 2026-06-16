@@ -1,17 +1,17 @@
-﻿CREATE FUNCTION function_soft_delete_user()
+﻿CREATE FUNCTION function_soft_delete_account()
     RETURNS TRIGGER AS
 $$
 BEGIN
-    UPDATE table_users
+    UPDATE table_accounts
     SET is_deleted = TRUE
-    WHERE id = OLD.id;
-    
+    WHERE email = OLD.email;
+
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_soft_delete_user
+CREATE TRIGGER trigger_soft_delete_account
     BEFORE DELETE
-    ON table_users
+    ON table_accounts
     FOR EACH ROW
-EXECUTE FUNCTION function_soft_delete_user();
+EXECUTE FUNCTION function_soft_delete_account();
