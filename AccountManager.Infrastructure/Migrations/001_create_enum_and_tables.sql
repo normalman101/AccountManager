@@ -7,10 +7,6 @@ CREATE TABLE table_accounts
     is_deleted BOOLEAN          NOT NULL DEFAULT FALSE
 );
 
-CREATE UNIQUE INDEX unique_account_email
-    ON table_accounts (email)
-    WHERE (is_deleted = FALSE);
-
 CREATE TABLE table_passwords
 (
     password   TEXT NOT NULL,
@@ -18,3 +14,9 @@ CREATE TABLE table_passwords
     CONSTRAINT relate_to_account UNIQUE (account_email),
     CONSTRAINT foreign_key_account_email FOREIGN KEY (account_email) REFERENCES table_accounts (email)
 );
+
+CREATE VIEW view_accounts AS
+SELECT table_accounts.email, table_accounts.role, table_passwords.password
+FROM table_accounts
+JOIN table_passwords ON table_accounts.email = table_passwords.account_email
+WHERE table_accounts.is_deleted = FALSE;
