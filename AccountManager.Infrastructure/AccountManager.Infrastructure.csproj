@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AccountManager.Core\AccountManager.Core.csproj" />
+      <ProjectReference Include="..\AccountManager.Application\AccountManager.Application.csproj" />
     </ItemGroup>
 
 </Project>

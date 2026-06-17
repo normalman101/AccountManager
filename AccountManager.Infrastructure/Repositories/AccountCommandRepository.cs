@@ -1,23 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using AccountManager.Application.Interface;
 using AccountManager.Core.Entities;
-using AccountManager.Core.ValueObjects;
 using Dapper;
 using Npgsql;
 
 namespace AccountManager.Infrastructure.Repositories;
 
-[SuppressMessage("ReSharper", "RedundantAnonymousTypePropertyName")]
-public class AccountRepository(string connectionString)
+public class AccountCommandRepository(string connectionString) : IAccountCommandRepository
 {
     public async Task Add(Account account)
     {
         await using var connection = new NpgsqlConnection(connectionString);
         await connection.OpenAsync();
         await using var transaction = await connection.BeginTransactionAsync();
-        
+
         try
         {
             await connection.ExecuteAsync(
@@ -46,51 +42,6 @@ public class AccountRepository(string connectionString)
         }
     }
 
-    public async Task<Account?> GetByEmail(Email email)
-    {
-        await using var connection = new NpgsqlConnection(connectionString);
-
-        var row = await connection.QueryFirstOrDefaultAsync(
-            sql: """
-                 SELECT table_accounts.email, table_accounts.role, table_passwords.password 
-                 FROM table_accounts
-                 JOIN table_passwords ON table_accounts.email = table_passwords.account_email
-                 WHERE table_accounts.email = @Email AND table_accounts.is_deleted = FALSE;
-                 """,
-            param: new { Email = email.Value }
-        );
-
-        if (row is null) return null;
-
-        return new Account
-        {
-            Email = new Email { Value = row.email },
-            Password = new Password { Value = row.password },
-            Role = row.role
-        };
-    }
-
-    public async Task<IEnumerable<Account>> GetAll()
-    {
-        await using var connection = new NpgsqlConnection(connectionString);
-
-        var rows = await connection.QueryAsync(
-            sql: """
-                 SELECT table_accounts.email, table_accounts.role, table_passwords.password 
-                 FROM table_accounts
-                 JOIN table_passwords ON table_accounts.email = table_passwords.account_email
-                 """
-        );
-
-        return rows.Select(row =>
-            new Account
-            {
-                Email = new Email { Value = row.email },
-                Password = new Password { Value = row.password },
-                Role = row.role
-            }
-        ).ToList();
-    }
 
     public async Task<bool> Update(Account newAccount)
     {
@@ -99,7 +50,7 @@ public class AccountRepository(string connectionString)
         await using var transaction = await connection.BeginTransactionAsync();
 
         var affectedRows = 0;
-        
+
         try
         {
             affectedRows = await connection.ExecuteAsync(

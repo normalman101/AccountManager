@@ -5,6 +5,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountManager.Infrastructure", "AccountManager.Infrastructure\AccountManager.Infrastructure.csproj", "{D26EC4E2-B12C-4C7B-8BC3-CA8821A4FD15}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6F32CA48-71A6-4195-B963-EFFFF1524F54} = {6F32CA48-71A6-4195-B963-EFFFF1524F54}
+		{E31BD943-B8FB-4E72-9E31-788F246AD9F5} = {E31BD943-B8FB-4E72-9E31-788F246AD9F5}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountManager.Application", "AccountManager.Application\AccountManager.Application.csproj", "{E31BD943-B8FB-4E72-9E31-788F246AD9F5}"

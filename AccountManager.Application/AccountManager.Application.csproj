@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\AccountManager.Core\AccountManager.Core.csproj" />
-      <ProjectReference Include="..\AccountManager.Infrastructure\AccountManager.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
