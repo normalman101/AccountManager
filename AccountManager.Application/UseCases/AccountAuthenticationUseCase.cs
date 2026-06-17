@@ -4,7 +4,7 @@ using AccountManager.Core.Entities;
 
 namespace AccountManager.Application.UseCases;
 
-public class AccountAuthorizationUseCase(IAccountQueryRepository accountQueryRepository)
+public class AccountAuthenticationUseCase(IAccountQueryRepository accountQueryRepository)
     : IExecutable<Account, Task<Account?>>
 {
     public async Task<Account?> Execute(Account account)
