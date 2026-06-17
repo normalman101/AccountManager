@@ -12,17 +12,15 @@ namespace AccountManager.Infrastructure.Repositories;
 [SuppressMessage("ReSharper", "RedundantAnonymousTypePropertyName")]
 public class AccountRepository(string connectionString)
 {
-    public async Task<bool> Add(Account account)
+    public async Task Add(Account account)
     {
         await using var connection = new NpgsqlConnection(connectionString);
         await connection.OpenAsync();
         await using var transaction = await connection.BeginTransactionAsync();
-
-        var affectedRows = 0;
         
         try
         {
-            affectedRows = await connection.ExecuteAsync(
+            await connection.ExecuteAsync(
                 sql: """
                      INSERT INTO table_accounts(email, role) 
                      VALUES (@Email, @Role);
@@ -46,8 +44,6 @@ public class AccountRepository(string connectionString)
         {
             await transaction.RollbackAsync();
         }
-
-        return affectedRows > 0;
     }
 
     public async Task<Account?> GetByEmail(Email email)
