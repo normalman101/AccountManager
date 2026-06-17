@@ -5,7 +5,7 @@ namespace AccountManager.Application.Interface;
 
 public interface IAccountCommandRepository
 {
-    Task Add(Account account);
+    Task<bool> Add(Account account);
 
     Task<bool> Update(Account account);
 
