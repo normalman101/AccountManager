@@ -1,0 +1,44 @@
+﻿<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
+    x:Class="AccountManager.Presentation.Views.Pages.MenuView">
+
+    <Grid
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        RowDefinitions="*, *, *"
+        RowSpacing="20">
+
+        <Button
+            Grid.Row="0"
+            HorizontalAlignment="Center"
+            Width="250"
+            Height="50"
+            Content="Войти"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center" />
+
+        <Button
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            Width="250"
+            Height="50"
+            Content="Зарегистрироваться"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center" />
+
+        <Button
+            Grid.Row="2"
+            HorizontalAlignment="Center"
+            Width="250"
+            Height="50"
+            Content="Восстановить доступ"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center" />
+
+    </Grid>
+
+</UserControl>

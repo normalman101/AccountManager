@@ -1,0 +1,58 @@
+﻿<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="AccountManager.Presentation.Views.Pages.Workspace.AccountInformationView">
+
+    <Grid
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        RowDefinitions="*, *"
+        RowSpacing="20">
+
+        <Grid
+            Grid.Row="0"
+            RowDefinitions="Auto, Auto"
+            RowSpacing="10">
+
+            <TextBlock
+                Grid.Row="0"
+                Text="Почта:" />
+
+            <TextBox
+                Grid.Row="1"
+                HorizontalAlignment="Left"
+                Width="250"
+                Height="50"
+                PlaceholderText="example@mail.com"
+                VerticalContentAlignment="Center"
+                IsEnabled="False" />
+
+        </Grid>
+
+        <Grid
+            Grid.Row="1"
+            RowDefinitions="Auto, Auto"
+            RowSpacing="10">
+
+            <TextBlock
+                Grid.Row="0"
+                Text="Пароль:" />
+
+            <TextBox
+                Grid.Row="1"
+                HorizontalAlignment="Left"
+                Width="250"
+                Height="50"
+                Text="example@mail.com"
+                PasswordChar="●"
+                VerticalContentAlignment="Center"
+                IsEnabled="False" />
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>
