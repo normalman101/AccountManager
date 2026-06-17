@@ -13,6 +13,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\AccountManager.Application\AccountManager.Application.csproj" />
+        <ProjectReference Include="..\AccountManager.Infrastructure\AccountManager.Infrastructure.csproj" />
     </ItemGroup>
     
     <ItemGroup>
@@ -28,14 +29,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Views\Windows\GatewayView.axaml.cs">
-        <DependentUpon>GatewayView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\Windows\WorkspaceView.axaml.cs">
-        <DependentUpon>WorkspaceView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
       <Compile Update="Views\Pages\Gateway\AuthenticationView.axaml.cs">
         <DependentUpon>AuthenticationView.axaml</DependentUpon>
         <SubType>Code</SubType>
@@ -50,6 +43,10 @@
       </Compile>
       <Compile Update="Views\Pages\Gateway\RegistrationView.axaml.cs">
         <DependentUpon>RegistrationView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\WindowView.axaml.cs">
+        <DependentUpon>WindowView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>

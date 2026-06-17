@@ -11,6 +11,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountManager.Application", "AccountManager.Application\AccountManager.Application.csproj", "{E31BD943-B8FB-4E72-9E31-788F246AD9F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountManager.Presentation", "AccountManager.Presentation\AccountManager.Presentation.csproj", "{8696ABFE-0C17-4085-949E-A6CA2BCCDB76}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D26EC4E2-B12C-4C7B-8BC3-CA8821A4FD15} = {D26EC4E2-B12C-4C7B-8BC3-CA8821A4FD15}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
