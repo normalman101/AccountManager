@@ -1,0 +1,48 @@
+﻿<Window
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:AccountManager.Presentation.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:DataType="vm:WindowViewModel"
+    x:Class="AccountManager.Presentation.Views.WindowView"
+    Title="WindowView"
+    Width="800"
+    Height="450"
+    WindowStartupLocation="CenterScreen">
+
+    
+    <Grid
+        RowDefinitions="Auto, *"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch">
+
+        <Menu
+            Grid.Row="0"
+            BorderBrush="LightGray"
+            BorderThickness="0, 0, 0, 2">
+            <MenuItem
+                Header="Выйти"
+                Command="{Binding LogOutCommand}"
+                IsVisible="{Binding IsLogOutButtonVisible}"/>
+            <MenuItem
+                Header="Аккаунты"
+                Command="{Binding GoToAccountsCommand}"
+                IsVisible="{Binding IsAccountsButtonVisible}"/>
+            <MenuItem
+                Header="Аккаунт"
+                Command="{Binding GoToAccountCommand}"
+                IsVisible="{Binding IsAccountButtonVisible}"/>
+        </Menu>
+
+        <ContentControl 
+            Grid.Row="1"
+            Padding="20"
+            Content="{Binding CurrentPage}"/>
+
+    </Grid>
+    
+
+    
+</Window>
