@@ -4,9 +4,9 @@
     xmlns:vm="using:AccountManager.Presentation.ViewModels.Pages.Gateway"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
     x:DataType="vm:RegistrationViewModel"
-    x:Class="AccountManager.Presentation.Views.Pages.RegistrationView">
+    x:Class="AccountManager.Presentation.Views.Pages.Gateway.RegistrationView">
     
     <Grid
         HorizontalAlignment="Stretch"
@@ -20,7 +20,8 @@
             Width="250"
             Height="50"
             PlaceholderText="Почта"
-            VerticalContentAlignment="Center"/>
+            VerticalContentAlignment="Center"
+            Text="{Binding Email}"/>
         
         <TextBox
             Grid.Row="1"
@@ -29,7 +30,8 @@
             Height="50"
             PasswordChar="●"
             PlaceholderText="Пароль"
-            VerticalContentAlignment="Center"/>
+            VerticalContentAlignment="Center"
+            Text="{Binding Password}"/>
         
         <TextBox
             Grid.Row="2"
@@ -38,7 +40,8 @@
             Height="50"
             PasswordChar="●"
             PlaceholderText="Повторить пароль"
-            VerticalContentAlignment="Center"/>
+            VerticalContentAlignment="Center"
+            Text="{Binding RepeatedPassword}"/>
         
         <Button
             Grid.Row="3"
@@ -47,7 +50,8 @@
             Height="50"
             Content="Зарегистрироваться"
             HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center" />
+            VerticalContentAlignment="Center" 
+            Command="{Binding SignUpCommand}"/>
 
     </Grid>
     
