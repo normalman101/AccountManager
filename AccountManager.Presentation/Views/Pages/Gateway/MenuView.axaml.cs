@@ -1,8 +1,6 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 
-namespace AccountManager.Presentation.Views.Pages;
+namespace AccountManager.Presentation.Views.Pages.Gateway;
 
 public partial class MenuView : UserControl
 {

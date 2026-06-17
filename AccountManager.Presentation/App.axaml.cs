@@ -1,6 +1,9 @@
+using AccountManager.Application.UseCases;
+using AccountManager.Infrastructure.Repositories;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using AccountManager.Presentation.Views;
+using WindowView = AccountManager.Presentation.Views.WindowView;
+using WindowViewModel = AccountManager.Presentation.ViewModels.WindowViewModel;
 
 namespace AccountManager.Presentation;
 
@@ -13,11 +16,33 @@ public partial class App : Avalonia.Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        const string connectionString = "Host=localhost;Port=5430;Database=postgres;Username=postgres;Password=1234";
+
+        var accountCommandRepository = new AccountCommandRepository(connectionString);
+        var accountQueryRepository = new AccountQueryRepository(connectionString);
+
+        var accountAuthenticationUseCase =
+            new AccountAuthenticationUseCase(accountQueryRepository);
+        var accountDeletionUseCase =
+            new AccountDeletionUseCase(accountCommandRepository);
+        var accountInformationUpdateUseCase =
+            new AccountInformationUpdateUseCase(accountCommandRepository);
+        var accountRecoveryUseCase =
+            new AccountRecoveryUseCase(accountQueryRepository, accountCommandRepository);
+        var accountRegistrationUseCase =
+            new AccountRegistrationUseCase(accountCommandRepository, accountQueryRepository);
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new GatewayView()
+            desktop.MainWindow = new WindowView
             {
-                // DataContext = new MainWindowViewModel(),
+                DataContext = new WindowViewModel(
+                    accountAuthenticationUseCase,
+                    accountDeletionUseCase,
+                    accountInformationUpdateUseCase,
+                    accountRecoveryUseCase,
+                    accountRegistrationUseCase
+                ),
             };
         }
 
