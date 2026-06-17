@@ -8,15 +8,17 @@ namespace AccountManager.Infrastructure.Repositories;
 
 public class AccountCommandRepository(string connectionString) : IAccountCommandRepository
 {
-    public async Task Add(Account account)
+    public async Task<bool> Add(Account account)
     {
         await using var connection = new NpgsqlConnection(connectionString);
         await connection.OpenAsync();
         await using var transaction = await connection.BeginTransactionAsync();
 
+        var affectedRows = 0;
+        
         try
         {
-            await connection.ExecuteAsync(
+            affectedRows = await connection.ExecuteAsync(
                 sql: """
                      INSERT INTO table_accounts(email, role) 
                      VALUES (@Email, @Role);
@@ -40,6 +42,8 @@ public class AccountCommandRepository(string connectionString) : IAccountCommand
         {
             await transaction.RollbackAsync();
         }
+        
+        return affectedRows > 0;
     }
 
 
