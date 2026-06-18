@@ -1,4 +1,5 @@
-﻿using AccountManager.Core.ValueObjects;
+﻿using AccountManager.Core.Enums;
+using AccountManager.Core.ValueObjects;
 
 namespace AccountManager.Core.Entities;
 
