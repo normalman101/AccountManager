@@ -21,29 +21,34 @@ public partial class WindowViewModel : ViewModelBase,
         AccountRegistrationUseCase accountRegistrationUseCase
     )
     {
+        
         _accountAuthenticationUseCase = accountAuthenticationUseCase;
         _accountDeletionUseCase = accountDeletionUseCase;
         _accountInformationUpdateUseCase = accountInformationUpdateUseCase;
         _accountRecoveryUseCase = accountRecoveryUseCase;
         _accountRegistrationUseCase = accountRegistrationUseCase;
 
+        CurrentPage = new MenuViewModel(
+            _accountAuthenticationUseCase,
+            _accountRegistrationUseCase,
+            _accountRecoveryUseCase
+        );
+
+        Account = null;
+        
         WeakReferenceMessenger.Default.Register<PageChangedMessage>(this);
         WeakReferenceMessenger.Default.Register<UserLoggedInMessage>(this);
     }
 
     [ObservableProperty]
-    public partial ViewModelBase CurrentPage { get; set; } = new MenuViewModel(
-        _accountAuthenticationUseCase,
-        _accountRegistrationUseCase,
-        _accountRecoveryUseCase
-    );
+    public partial ViewModelBase CurrentPage { get; set; }
 
-    private static AccountAuthenticationUseCase _accountAuthenticationUseCase = null!;
-    private static AccountDeletionUseCase _accountDeletionUseCase = null!;
-    private static AccountInformationUpdateUseCase _accountInformationUpdateUseCase = null!;
-    private static AccountRecoveryUseCase _accountRecoveryUseCase = null!;
-    private static AccountRegistrationUseCase _accountRegistrationUseCase = null!;
-    [ObservableProperty] public partial Account? Account { get; set; } = null;
+    private AccountAuthenticationUseCase _accountAuthenticationUseCase;
+    private AccountDeletionUseCase _accountDeletionUseCase;
+    private AccountInformationUpdateUseCase _accountInformationUpdateUseCase;
+    private AccountRecoveryUseCase _accountRecoveryUseCase;
+    private AccountRegistrationUseCase _accountRegistrationUseCase;
+    [ObservableProperty] public partial Account? Account { get; set; }
 
     [ObservableProperty] public partial bool IsLogOutButtonVisible { get; set; }
 
