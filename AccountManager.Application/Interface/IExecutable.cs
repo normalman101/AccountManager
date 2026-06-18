@@ -1,6 +1,9 @@
-﻿namespace AccountManager.Application.Interface;
+﻿using System.Threading.Tasks;
+using AccountManager.Application.DTOs;
 
-public interface IExecutable<in TParameter, out TValue>
+namespace AccountManager.Application.Interface;
+
+public interface IExecutable<out TValue, in TParameter>
 {
-    TValue Execute(TParameter data);
+    TValue Execute(TParameter request);
 }
