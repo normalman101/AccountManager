@@ -2,13 +2,13 @@
 
 namespace AccountManager.Core.ValueObjects;
 
-public record Password()
+public record Role()
 {
     public required string Value
     {
         init
         {
-            if (string.IsNullOrWhiteSpace(value)) throw new Exception("Пароль отсутствует");
+            if (string.IsNullOrWhiteSpace(value)) throw new Exception("Роль отсутствует");
 
             field = value;
         }
