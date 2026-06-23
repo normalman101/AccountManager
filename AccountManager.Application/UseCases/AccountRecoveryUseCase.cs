@@ -1,22 +1,37 @@
 ﻿using System.Threading.Tasks;
-using AccountManager.Application.Interface;
-using AccountManager.Core.Entities;
+using AccountManager.Application.DTOs.Requests;
+using AccountManager.Application.DTOs.Responses;
+using AccountManager.Application.Interfaces;
+using AccountManager.Core.Results;
+using AccountManager.Core.ValueObjects;
 
 namespace AccountManager.Application.UseCases;
 
 public class AccountRecoveryUseCase(
     IAccountQueryRepository accountQueryRepository,
     IAccountCommandRepository accountCommandRepository
-) : IExecutable<Account, Task<Account?>>
+) : IExecutable<Task<Result<RecoveryResponse>>, RecoveryRequest>
 {
-    public async Task<Account?> Execute(Account account)
+    public async Task<Result<RecoveryResponse>> Execute(RecoveryRequest request)
     {
-        var foundAccount = await accountQueryRepository.GetByEmail(account.Email);
+        var email = Email.Create(request.Email);
+        var password = Password.Create(request.Password);
 
-        if (foundAccount is null) return null;
+        if (email.IsFailure) return Result<RecoveryResponse>.Failure(email.Error);
 
-        await accountCommandRepository.Update(account);
+        if (password.IsFailure) return Result<RecoveryResponse>.Failure(password.Error);
 
-        return account;
+        var foundAccount = await accountQueryRepository.GetByEmail(email.Value!);
+
+        if (foundAccount.IsFailure) return Result<RecoveryResponse>.Failure(foundAccount.Error);
+
+        var result = await accountCommandRepository.Recover(
+            email.Value!,
+            password.Value!
+        );
+
+        return result.IsSuccess
+            ? Result<RecoveryResponse>.Success(new RecoveryResponse(true))
+            : Result<RecoveryResponse>.Failure(result.Error);
     }
 }

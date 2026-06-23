@@ -1,18 +1,38 @@
 ﻿using System.Threading.Tasks;
-using AccountManager.Application.Interface;
-using AccountManager.Core.Entities;
+using AccountManager.Application.DTOs.Requests;
+using AccountManager.Application.DTOs.Responses;
+using AccountManager.Application.Interfaces;
+using AccountManager.Core.Errors;
+using AccountManager.Core.Results;
+using AccountManager.Core.ValueObjects;
 
 namespace AccountManager.Application.UseCases;
 
 public class AccountAuthenticationUseCase(IAccountQueryRepository accountQueryRepository)
-    : IExecutable<Account, Task<Account?>>
+    : IExecutable<Task<Result<AuthenticateResponse>>, AuthenticateRequest>
 {
-    public async Task<Account?> Execute(Account account)
+    public async Task<Result<AuthenticateResponse>> Execute(AuthenticateRequest request)
     {
-        var foundAccount = await accountQueryRepository.GetByEmail(account.Email);
+        var email = Email.Create(request.Email);
 
-        if (foundAccount is null) return null;
+        if (email.IsFailure) return Result<AuthenticateResponse>.Failure(email.Error);
 
-        return account.Password.Value != foundAccount.Password.Value ? null : account;
+        var foundAccount = await accountQueryRepository.GetByEmail(email.Value!);
+
+        if (foundAccount.IsFailure) return Result<AuthenticateResponse>.Failure(foundAccount.Error);
+
+        if (foundAccount.Value!.Password.Value != request.Password)
+        {
+            return Result<AuthenticateResponse>.Failure(new Error(
+                ErrorCode.IncorrectPassword,
+                "Неверный пароль"
+            ));
+        }
+
+        return Result<AuthenticateResponse>.Success(new AuthenticateResponse(
+            foundAccount.Value.Email.Value,
+            foundAccount.Value.Password.Value,
+            foundAccount.Value.Role
+        ));
     }
 }
