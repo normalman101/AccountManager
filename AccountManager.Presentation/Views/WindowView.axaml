@@ -12,37 +12,9 @@
     Height="450"
     WindowStartupLocation="CenterScreen">
 
-    
-    <Grid
-        RowDefinitions="Auto, *"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch">
+        <ContentControl
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Content="{Binding CurrentPage}" />
 
-        <Menu
-            Grid.Row="0"
-            BorderBrush="LightGray"
-            BorderThickness="0, 0, 0, 2">
-            <MenuItem
-                Header="Выйти"
-                Command="{Binding LogOutCommand}"
-                IsVisible="{Binding IsLogOutButtonVisible}"/>
-            <MenuItem
-                Header="Аккаунты"
-                Command="{Binding GoToAccountsCommand}"
-                IsVisible="{Binding IsAccountsButtonVisible}"/>
-            <MenuItem
-                Header="Аккаунт"
-                Command="{Binding GoToAccountCommand}"
-                IsVisible="{Binding IsAccountButtonVisible}"/>
-        </Menu>
-
-        <ContentControl 
-            Grid.Row="1"
-            Padding="20"
-            Content="{Binding CurrentPage}"/>
-
-    </Grid>
-    
-
-    
 </Window>

@@ -1,97 +1,82 @@
-﻿using AccountManager.Application.UseCases;
-using AccountManager.Core.Entities;
+﻿using AccountManager.Application.DTOs;
+using AccountManager.Application.UseCases;
 using AccountManager.Presentation.Messages;
 using AccountManager.Presentation.ViewModels.Pages.Gateway;
 using AccountManager.Presentation.ViewModels.Pages.Workspace;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 namespace AccountManager.Presentation.ViewModels;
 
-public partial class WindowViewModel : ViewModelBase,
-    IRecipient<PageChangedMessage>,
-    IRecipient<UserLoggedInMessage>
+public partial class WindowViewModel :
+    ViewModelBase,
+    IRecipient<AccountLoggedInMessage>,
+    IRecipient<AccountLoggedOutMessage>
 {
     public WindowViewModel(
         AccountAuthenticationUseCase accountAuthenticationUseCase,
         AccountDeletionUseCase accountDeletionUseCase,
         AccountInformationUpdateUseCase accountInformationUpdateUseCase,
         AccountRecoveryUseCase accountRecoveryUseCase,
-        AccountRegistrationUseCase accountRegistrationUseCase
+        AccountRegistrationUseCase accountRegistrationUseCase,
+        GetAllAccountsUseCase getAllAccountsUseCase
     )
     {
-        
         _accountAuthenticationUseCase = accountAuthenticationUseCase;
         _accountDeletionUseCase = accountDeletionUseCase;
         _accountInformationUpdateUseCase = accountInformationUpdateUseCase;
         _accountRecoveryUseCase = accountRecoveryUseCase;
         _accountRegistrationUseCase = accountRegistrationUseCase;
-
-        CurrentPage = new MenuViewModel(
+        _getAllAccountsUseCase = getAllAccountsUseCase;
+        
+        CurrentPage = new GatewayViewModel(
             _accountAuthenticationUseCase,
             _accountRegistrationUseCase,
             _accountRecoveryUseCase
         );
+        
+        Account = null;
 
+        WeakReferenceMessenger.Default.Register<AccountLoggedInMessage>(this);
+        WeakReferenceMessenger.Default.Register<AccountLoggedOutMessage>(this);
+    }
+
+    private readonly AccountAuthenticationUseCase _accountAuthenticationUseCase;
+    private readonly AccountDeletionUseCase _accountDeletionUseCase;
+    private readonly AccountInformationUpdateUseCase _accountInformationUpdateUseCase;
+    private readonly AccountRecoveryUseCase _accountRecoveryUseCase;
+    private readonly AccountRegistrationUseCase _accountRegistrationUseCase;
+    private readonly GetAllAccountsUseCase _getAllAccountsUseCase;
+    
+    [ObservableProperty] public partial ViewModelBase CurrentPage { get; set; }
+    
+    private AccountDto? Account { get; set; }
+
+    public void Receive(AccountLoggedInMessage message)
+    {
+        Account = new AccountDto
+        {
+            Email = message.Value.Email,
+            Password = message.Value.Password,
+            Role = message.Value.Role
+        };
+        
+        CurrentPage = new WorkspaceViewModel(
+            Account, 
+            _getAllAccountsUseCase,
+            _accountInformationUpdateUseCase,
+            _accountDeletionUseCase
+        );
+    }
+
+    public void Receive(AccountLoggedOutMessage message)
+    {
         Account = null;
         
-        WeakReferenceMessenger.Default.Register<PageChangedMessage>(this);
-        WeakReferenceMessenger.Default.Register<UserLoggedInMessage>(this);
-    }
-
-    [ObservableProperty]
-    public partial ViewModelBase CurrentPage { get; set; }
-
-    private AccountAuthenticationUseCase _accountAuthenticationUseCase;
-    private AccountDeletionUseCase _accountDeletionUseCase;
-    private AccountInformationUpdateUseCase _accountInformationUpdateUseCase;
-    private AccountRecoveryUseCase _accountRecoveryUseCase;
-    private AccountRegistrationUseCase _accountRegistrationUseCase;
-    [ObservableProperty] public partial Account? Account { get; set; }
-
-    [ObservableProperty] public partial bool IsLogOutButtonVisible { get; set; }
-
-    [ObservableProperty] public partial bool IsAccountsButtonVisible { get; set; }
-
-    [ObservableProperty] public partial bool IsAccountButtonVisible { get; set; }
-
-    [RelayCommand]
-    private void LogOut()
-    {
-        Account = null;
-        IsLogOutButtonVisible = false;
-        IsAccountsButtonVisible = false;
-        IsAccountButtonVisible = false;
-        CurrentPage = new MenuViewModel(
+        CurrentPage = new GatewayViewModel(
             _accountAuthenticationUseCase,
             _accountRegistrationUseCase,
             _accountRecoveryUseCase
         );
-    }
-
-    [RelayCommand]
-    private void GoToAccounts()
-    {
-        CurrentPage = new AccountsViewModel();
-    }
-
-    [RelayCommand]
-    private void GoToAccount()
-    {
-        CurrentPage = new AccountInformationViewModel();
-    }
-
-    public void Receive(PageChangedMessage message)
-    {
-        CurrentPage = message.Value;
-    }
-
-    public void Receive(UserLoggedInMessage message)
-    {
-        Account = message.Value;
-        IsLogOutButtonVisible = true;
-        IsAccountsButtonVisible = true;
-        IsAccountButtonVisible = true;
     }
 }

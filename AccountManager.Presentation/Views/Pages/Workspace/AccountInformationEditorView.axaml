@@ -28,7 +28,7 @@
                 HorizontalAlignment="Left"
                 Width="250"
                 Height="50"
-                Text="example@mail.com"
+                Text="{Binding Email}"
                 VerticalContentAlignment="Center" />
 
         </Grid>
@@ -47,12 +47,12 @@
                 HorizontalAlignment="Left"
                 Width="250"
                 Height="50"
-                Text="example@mail.com"
+                Text="{Binding Password}"
                 PasswordChar="●"
                 VerticalContentAlignment="Center" />
 
         </Grid>
-        
+
         <Grid
             Grid.Row="2"
             RowDefinitions="Auto, Auto"
@@ -64,7 +64,7 @@
 
             <ComboBox
                 Grid.Row="1"
-                SelectedIndex="0">
+                SelectedIndex="{Binding Role}">
                 <ComboBoxItem>Обычный</ComboBoxItem>
                 <ComboBoxItem>Админ</ComboBoxItem>
             </ComboBox>
@@ -82,7 +82,8 @@
                 Height="50"
                 Content="Сохранить"
                 HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center" />
+                VerticalContentAlignment="Center"
+                Command="{Binding SaveCommand}" />
 
             <Button
                 Grid.Column="1"
@@ -91,7 +92,8 @@
                 Height="50"
                 Content="Отменить"
                 HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center" />
+                VerticalContentAlignment="Center"
+                Command="{Binding CancelCommand}"/>
 
         </Grid>
 

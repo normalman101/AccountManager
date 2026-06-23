@@ -28,7 +28,7 @@
                 HorizontalAlignment="Left"
                 Width="250"
                 Height="50"
-                PlaceholderText="example@mail.com"
+                Text="{Binding Email}"
                 VerticalContentAlignment="Center"
                 IsEnabled="False" />
 
@@ -48,7 +48,7 @@
                 HorizontalAlignment="Left"
                 Width="250"
                 Height="50"
-                Text="example@mail.com"
+                Text="{Binding Password}"
                 PasswordChar="●"
                 VerticalContentAlignment="Center"
                 IsEnabled="False" />

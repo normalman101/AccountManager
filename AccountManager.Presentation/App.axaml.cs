@@ -26,11 +26,13 @@ public partial class App : Avalonia.Application
         var accountDeletionUseCase =
             new AccountDeletionUseCase(accountCommandRepository);
         var accountInformationUpdateUseCase =
-            new AccountInformationUpdateUseCase(accountCommandRepository);
+            new AccountInformationUpdateUseCase(accountQueryRepository, accountCommandRepository);
         var accountRecoveryUseCase =
             new AccountRecoveryUseCase(accountQueryRepository, accountCommandRepository);
         var accountRegistrationUseCase =
             new AccountRegistrationUseCase(accountCommandRepository, accountQueryRepository);
+        var getAllAccountsUseCase =
+            new GetAllAccountsUseCase(accountQueryRepository);
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -41,7 +43,8 @@ public partial class App : Avalonia.Application
                     accountDeletionUseCase,
                     accountInformationUpdateUseCase,
                     accountRecoveryUseCase,
-                    accountRegistrationUseCase
+                    accountRegistrationUseCase,
+                    getAllAccountsUseCase
                 ),
             };
         }

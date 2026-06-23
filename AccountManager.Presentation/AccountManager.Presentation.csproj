@@ -49,5 +49,13 @@
         <DependentUpon>WindowView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\Pages\Gateway\GatewayView.axaml.cs">
+        <DependentUpon>GatewayView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Pages\Workspace\WorkspaceView.axaml.cs">
+        <DependentUpon>WorkspaceView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 </Project>

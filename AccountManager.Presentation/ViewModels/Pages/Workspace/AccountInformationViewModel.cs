@@ -1,6 +1,12 @@
-﻿namespace AccountManager.Presentation.ViewModels.Pages.Workspace;
+﻿using AccountManager.Application.DTOs;
+using AccountManager.Core.Entities;
+using CommunityToolkit.Mvvm.ComponentModel;
 
-public class AccountInformationViewModel : ViewModelBase
+namespace AccountManager.Presentation.ViewModels.Pages.Workspace;
+
+public partial class AccountInformationViewModel(AccountDto accountDto) : ViewModelBase
 {
-    
+    [ObservableProperty] public partial string Email { get; set; } = accountDto.Email;
+
+    [ObservableProperty] public partial string Password { get; set; } = accountDto.Password;
 }

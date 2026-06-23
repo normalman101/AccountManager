@@ -51,7 +51,7 @@
             Content="Зарегистрироваться"
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center" 
-            Command="{Binding SignUpCommand}"/>
+            Command="{Binding RegisterCommand}"/>
 
     </Grid>
     

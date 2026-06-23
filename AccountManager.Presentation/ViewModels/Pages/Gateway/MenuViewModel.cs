@@ -14,24 +14,30 @@ public partial class MenuViewModel(
     [RelayCommand]
     private void GoToAuthentication()
     {
-        WeakReferenceMessenger.Default.Send(
-            new PageChangedMessage(new AuthenticationViewModel(accountAuthenticationUseCase, accountRecoveryUseCase))
-        );
+        WeakReferenceMessenger.Default.Send(new PageMessage(
+            new AuthenticationViewModel(
+                accountAuthenticationUseCase,
+                accountRecoveryUseCase
+            )
+        ));
     }
 
     [RelayCommand]
     private void GoToRegistration()
     {
-        WeakReferenceMessenger.Default.Send(
-            new PageChangedMessage(new RegistrationViewModel(accountRegistrationUseCase))
-        );
+        WeakReferenceMessenger.Default.Send(new PageMessage(
+            new RegistrationViewModel(accountRegistrationUseCase)
+        ));
     }
 
     [RelayCommand]
     private void GoToRecovery()
     {
-        WeakReferenceMessenger.Default.Send(
-            new PageChangedMessage(new RecoveryViewModel(accountRecoveryUseCase, accountAuthenticationUseCase))
-        );
+        WeakReferenceMessenger.Default.Send(new PageMessage(
+            new RecoveryViewModel(
+                accountRecoveryUseCase,
+                accountAuthenticationUseCase
+            )
+        ));
     }
 }
