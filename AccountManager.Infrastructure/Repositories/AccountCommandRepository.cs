@@ -1,6 +1,10 @@
 ﻿using System.Threading.Tasks;
-using AccountManager.Application.Interface;
+using AccountManager.Application.Interfaces;
 using AccountManager.Core.Entities;
+using AccountManager.Core.Enums;
+using AccountManager.Core.Errors;
+using AccountManager.Core.Results;
+using AccountManager.Core.ValueObjects;
 using Dapper;
 using Npgsql;
 
@@ -8,86 +12,100 @@ namespace AccountManager.Infrastructure.Repositories;
 
 public class AccountCommandRepository(string connectionString) : IAccountCommandRepository
 {
-    public async Task<bool> Add(Account account)
+    public async Task<ResultVoid> Add(Account account)
     {
         await using var connection = new NpgsqlConnection(connectionString);
         await connection.OpenAsync();
         await using var transaction = await connection.BeginTransactionAsync();
 
-        var affectedRows = 0;
-        
+        bool isAdded;
+
         try
         {
-            affectedRows = await connection.ExecuteAsync(
-                sql: """
-                     INSERT INTO table_accounts(email, role) 
-                     VALUES (@Email, @Role);
-
-                     INSERT INTO table_passwords(password, account_email)
-                     VALUES (@Password, @AccountEmail)
-                     """,
+            isAdded = await connection.ExecuteScalarAsync<bool>(
+                sql: "SELECT function_add_account(@Email, @Password, @Role);",
                 param: new
                 {
                     Email = account.Email.Value,
-                    Role = account.Role,
                     Password = account.Password.Value,
-                    AccountEmail = account.Email.Value
+                    Role = Role.Normal
                 },
                 transaction
             );
 
             await transaction.CommitAsync();
         }
-        catch
+        catch (NpgsqlException)
         {
             await transaction.RollbackAsync();
+            throw;
         }
-        
-        return affectedRows > 0;
+
+        if (!isAdded)
+        {
+            return ResultVoid.Failure(new Error(
+                ErrorCode.AccountHasNotBeenAdded,
+                "Аккаунт не добавился"
+            ));
+        }
+
+        return ResultVoid.Success();
     }
 
-
-    public async Task<bool> Update(Account newAccount)
+    public async Task Update(Email oldAccountEmail, Account newAccount)
     {
         await using var connection = new NpgsqlConnection(connectionString);
         await connection.OpenAsync();
         await using var transaction = await connection.BeginTransactionAsync();
 
-        var affectedRows = 0;
-
         try
         {
-            affectedRows = await connection.ExecuteAsync(
-                sql: """
-                     UPDATE table_accounts
-                     SET email = @Email, role = @Role
-                     WHERE email = @Email;
-
-                     UPDATE table_passwords
-                     SET password = @Password
-                     WHERE account_email = @AccountEmail;
-                     """,
+            await connection.ExecuteAsync(
+                sql: "CALL procedure_update_account(@OldEmail, @NewEmail, @NewPassword, @NewRole);",
                 param: new
                 {
-                    Email = newAccount.Email.Value,
-                    Role = newAccount.Role,
-                    Password = newAccount.Password.Value,
-                    AccountEmail = newAccount.Email.Value,
+                    OldEmail = oldAccountEmail.Value,
+                    NewEmail = newAccount.Email.Value,
+                    NewPassword = newAccount.Password.Value,
+                    NewRole = newAccount.Role
                 },
                 transaction
             );
 
             await transaction.CommitAsync();
         }
-        catch
+        catch (NpgsqlException)
         {
             await transaction.RollbackAsync();
+            throw;
         }
-
-        return affectedRows > 0;
     }
 
-    public async Task<bool> Delete(Account account)
+    public async Task<ResultVoid> Recover(Email email, Password newPassword)
+    {
+        await using var connection = new NpgsqlConnection(connectionString);
+
+        var isRecovered = await connection.ExecuteScalarAsync<bool>(
+            sql: "SELECT function_recover_account(@Email, @NewPassword);",
+            param: new
+            {
+                Email = email.Value,
+                NewPassword = newPassword.Value
+            }
+        );
+
+        if (!isRecovered)
+        {
+            return ResultVoid.Failure(new Error(
+                ErrorCode.AccountHasNotBeenRecovered,
+                "Аккаунт не восстановился"
+            ));
+        }
+
+        return ResultVoid.Success();
+    }
+
+    public async Task<ResultVoid> Delete(Email email)
     {
         await using var connection = new NpgsqlConnection(connectionString);
 
@@ -96,9 +114,14 @@ public class AccountCommandRepository(string connectionString) : IAccountCommand
                  DELETE FROM table_accounts
                  WHERE email = @Email 
                  """,
-            param: new { Email = account.Email.Value }
+            param: new { Email = email.Value }
         );
 
-        return affectedRows > 0;
+        return affectedRows > 0
+            ? ResultVoid.Success()
+            : ResultVoid.Failure(new Error(
+                ErrorCode.AccountHasNotBeenDeleted,
+                "Аккаунт не удалился"
+            ));
     }
 }

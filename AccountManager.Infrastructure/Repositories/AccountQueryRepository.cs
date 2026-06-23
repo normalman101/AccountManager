@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AccountManager.Application.Interface;
+using AccountManager.Application.Interfaces;
 using AccountManager.Core.Entities;
+using AccountManager.Core.Errors;
+using AccountManager.Core.Results;
 using AccountManager.Core.ValueObjects;
+using AccountManager.Infrastructure.DTOs;
 using Dapper;
 using Npgsql;
 
@@ -11,49 +14,62 @@ namespace AccountManager.Infrastructure.Repositories;
 
 public class AccountQueryRepository(string connectionString) : IAccountQueryRepository
 {
-    public async Task<Account?> GetByEmail(Email email)
+    public async Task<Result<Account>> GetByEmail(Email email)
     {
-        await using var connection = new NpgsqlConnection(connectionString);
-
-        var row = await connection.QueryFirstOrDefaultAsync(
-            sql: """
-                 SELECT table_accounts.email, table_accounts.role, table_passwords.password 
-                 FROM table_accounts
-                 JOIN table_passwords ON table_accounts.email = table_passwords.account_email
-                 WHERE table_accounts.email = @Email AND table_accounts.is_deleted = FALSE;
-                 """,
-            param: new { Email = email.Value }
-        );
-
-        if (row is null) return null;
-
-        return new Account
+        try
         {
-            Email = new Email { Value = row.email },
-            Password = new Password { Value = row.password },
-            Role = row.role
-        };
+            await using var connection = new NpgsqlConnection(connectionString);
+
+            var account = await connection.QueryFirstOrDefaultAsync<AccountDto>(
+                sql: """
+                     SELECT view_accounts.email, view_accounts.role, view_accounts.password 
+                     FROM view_accounts
+                     WHERE email = @Email
+                     """,
+                param: new { Email = email.Value }
+            );
+
+            return account is null
+                ? Result<Account>.Failure(new Error(
+                    ErrorCode.AccountHasNotBeenFound,
+                    "Аккаунт не найден"
+                ))
+                : Result<Account>.Success(Account.Create(
+                        account.Email,
+                        account.Password,
+                        account.Role
+                    )
+                    .Value!);
+        }
+        catch (NpgsqlException)
+        {
+            throw;
+        }
     }
 
     public async Task<IEnumerable<Account>> GetAll()
     {
-        await using var connection = new NpgsqlConnection(connectionString);
+        try
+        {
+            await using var connection = new NpgsqlConnection(connectionString);
 
-        var rows = await connection.QueryAsync(
-            sql: """
-                 SELECT table_accounts.email, table_accounts.role, table_passwords.password 
-                 FROM table_accounts
-                 JOIN table_passwords ON table_accounts.email = table_passwords.account_email
-                 """
-        );
+            var accounts = await connection.QueryAsync<AccountDto>(
+                sql: """
+                     SELECT email, role, password 
+                     FROM view_accounts
+                     """
+            );
 
-        return rows.Select(row =>
-            new Account
-            {
-                Email = new Email { Value = row.email },
-                Password = new Password { Value = row.password },
-                Role = row.role
-            }
-        ).ToList();
+            return accounts.Select(a => Account.Create(
+                    a.Email,
+                    a.Password,
+                    a.Role
+                )
+                .Value!);
+        }
+        catch (NpgsqlException)
+        {
+            throw;
+        }
     }
 }
