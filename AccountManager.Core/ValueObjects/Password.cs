@@ -1,17 +1,28 @@
 ﻿using System;
+using AccountManager.Core.Errors;
+using AccountManager.Core.Results;
 
 namespace AccountManager.Core.ValueObjects;
 
-public record Password()
+public class Password
 {
-    public required string Value
+    private Password(string value)
     {
-        init
-        {
-            if (string.IsNullOrWhiteSpace(value)) throw new Exception("Пароль отсутствует");
+        Value = value;
+    }
 
-            field = value;
+    public string Value { get; }
+
+    public static Result<Password> Create(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            Result<Password>.Failure(new Error(
+                ErrorCode.PasswordIsEmpty,
+                "Пароль пустой"
+            ));
         }
-        get;
+
+        return Result<Password>.Success(new Password(value));
     }
 }

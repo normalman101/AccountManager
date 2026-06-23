@@ -1,19 +1,36 @@
 ﻿using System;
+using AccountManager.Core.Errors;
+using AccountManager.Core.Results;
 
 namespace AccountManager.Core.ValueObjects;
 
-public record Email
+public class Email
 {
-    public required string Value
+    private Email(string value)
     {
-        init
+        Value = value;
+    }
+
+    public string Value { get; }
+
+    public static Result<Email> Create(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
         {
-            if (string.IsNullOrWhiteSpace(value)) throw new Exception("Почта отсутствует");
-
-            if (!value.Contains('@') && value.Contains('.')) throw new Exception("Почта не валидна");
-
-            field = value;
+            Result<Email>.Failure(new Error(
+                ErrorCode.EmailIsEmpty,
+                "Почта пустая"
+            ));
         }
-        get;
+
+        if (!(value.Contains('@') && value.Contains('.')))
+        {
+            Result<Email>.Failure(new Error(
+                ErrorCode.EmailIsNotValid,
+                "Почта невалидна"
+            ));
+        }
+
+        return Result<Email>.Success(new Email(value));
     }
 }
