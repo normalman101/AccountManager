@@ -10,7 +10,7 @@ using CommunityToolkit.Mvvm.Messaging;
 
 namespace AccountManager.Presentation.ViewModels.Pages.Workspace;
 
-public partial class AccountInformationEditorViewModel(
+public sealed partial class AccountInformationEditorViewModel(
     AccountsViewModel accountsViewModel,
     AccountInformationUpdateUseCase accountInformationUpdateUseCase,
     AccountDto accountDto

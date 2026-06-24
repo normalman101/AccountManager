@@ -2,7 +2,7 @@
 
 namespace AccountManager.Application.DTOs.Requests;
 
-public record UpdateRequest(
+public sealed record UpdateRequest(
     string OldEmail,
     string NewEmail,
     string NewPassword,

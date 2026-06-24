@@ -4,4 +4,4 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace AccountManager.Presentation.Messages;
 
-public class PageMessage(ViewModelBase value) : ValueChangedMessage<ViewModelBase>(value);
+public sealed class PageMessage(ViewModelBase value) : ValueChangedMessage<ViewModelBase>(value);

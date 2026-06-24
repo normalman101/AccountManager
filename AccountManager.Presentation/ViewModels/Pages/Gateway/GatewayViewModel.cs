@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.Messaging;
 
 namespace AccountManager.Presentation.ViewModels.Pages.Gateway;
 
-public partial class GatewayViewModel :
+public sealed partial class GatewayViewModel :
     ViewModelBase,
     IRecipient<PageMessage>
 {

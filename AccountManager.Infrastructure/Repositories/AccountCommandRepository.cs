@@ -10,7 +10,7 @@ using Npgsql;
 
 namespace AccountManager.Infrastructure.Repositories;
 
-public class AccountCommandRepository(string connectionString) : IAccountCommandRepository
+public sealed class AccountCommandRepository(string connectionString) : IAccountCommandRepository
 {
     public async Task<ResultVoid> Add(Account account)
     {

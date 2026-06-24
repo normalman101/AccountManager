@@ -1,6 +1,6 @@
 ﻿namespace AccountManager.Application.DTOs.Requests;
 
-public record AuthenticateRequest(
+public sealed record AuthenticateRequest(
     string Email,
     string Password
 );

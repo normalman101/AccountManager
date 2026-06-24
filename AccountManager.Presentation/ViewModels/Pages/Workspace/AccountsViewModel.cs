@@ -11,7 +11,7 @@ using CommunityToolkit.Mvvm.Messaging;
 
 namespace AccountManager.Presentation.ViewModels.Pages.Workspace;
 
-public partial class AccountsViewModel(
+public sealed partial class AccountsViewModel(
     AccountInformationUpdateUseCase accountInformationUpdateUseCase,
     AccountDeletionUseCase accountDeletionUseCase,
     IEnumerable<AccountDto> accounts

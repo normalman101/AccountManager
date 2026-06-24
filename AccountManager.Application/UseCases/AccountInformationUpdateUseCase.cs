@@ -8,7 +8,7 @@ using AccountManager.Core.ValueObjects;
 
 namespace AccountManager.Application.UseCases;
 
-public class AccountInformationUpdateUseCase(
+public sealed class AccountInformationUpdateUseCase(
     IAccountQueryRepository accountQueryRepository,
     IAccountCommandRepository accountCommandRepository
 )

@@ -3,4 +3,4 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace AccountManager.Presentation.Messages;
 
-public class AccountLoggedInMessage(AccountLoggedIn value) : ValueChangedMessage<AccountLoggedIn>(value);
+public sealed class AccountLoggedInMessage(AccountLoggedIn value) : ValueChangedMessage<AccountLoggedIn>(value);

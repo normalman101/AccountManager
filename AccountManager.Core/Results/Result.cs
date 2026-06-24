@@ -3,15 +3,10 @@ using AccountManager.Core.Errors;
 
 namespace AccountManager.Core.Results;
 
-public class Result<TValue>
+public sealed class Result<TValue>
 {
     private Result(bool isSuccess, TValue? value, Error error)
     {
-        if (isSuccess && error.Code != ErrorCode.None || !isSuccess && error.Code == ErrorCode.None)
-        {
-            throw new ArgumentException("Нерпавильные аргументы результата");
-        }
-
         IsSuccess = isSuccess;
         Value = value;
         Error = error;

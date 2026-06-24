@@ -8,7 +8,7 @@ using AccountManager.Core.ValueObjects;
 
 namespace AccountManager.Application.UseCases;
 
-public class AccountAuthenticationUseCase(IAccountQueryRepository accountQueryRepository)
+public sealed class AccountAuthenticationUseCase(IAccountQueryRepository accountQueryRepository)
     : IExecutable<Task<Result<AuthenticateResponse>>, AuthenticateRequest>
 {
     public async Task<Result<AuthenticateResponse>> Execute(AuthenticateRequest request)

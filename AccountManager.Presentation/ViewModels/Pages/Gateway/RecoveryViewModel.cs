@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.Messaging;
 
 namespace AccountManager.Presentation.ViewModels.Pages.Gateway;
 
-public partial class RecoveryViewModel(
+public sealed partial class RecoveryViewModel(
     AccountRecoveryUseCase accountRecoveryUseCase,
     AccountAuthenticationUseCase accountAuthenticationUseCase
 ) : ViewModelBase

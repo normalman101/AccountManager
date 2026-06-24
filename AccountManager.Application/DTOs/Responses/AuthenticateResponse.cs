@@ -2,7 +2,7 @@
 
 namespace AccountManager.Application.DTOs.Responses;
 
-public record AuthenticateResponse(
+public sealed record AuthenticateResponse(
     string Email,
     string Password,
     Role Role

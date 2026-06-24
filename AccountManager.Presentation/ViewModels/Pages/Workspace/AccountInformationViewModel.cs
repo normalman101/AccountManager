@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace AccountManager.Presentation.ViewModels.Pages.Workspace;
 
-public partial class AccountInformationViewModel(AccountDto accountDto) : ViewModelBase
+public sealed partial class AccountInformationViewModel(AccountDto accountDto) : ViewModelBase
 {
     [ObservableProperty] public partial string Email { get; set; } = accountDto.Email;
 

@@ -9,7 +9,7 @@ using CommunityToolkit.Mvvm.Messaging;
 
 namespace AccountManager.Presentation.ViewModels.Pages.Gateway;
 
-public partial class AuthenticationViewModel(
+public sealed partial class AuthenticationViewModel(
     AccountAuthenticationUseCase accountAuthenticationUseCase,
     AccountRecoveryUseCase accountRecoveryUseCase
 ) : ViewModelBase

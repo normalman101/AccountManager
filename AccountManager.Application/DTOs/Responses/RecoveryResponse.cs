@@ -1,3 +1,3 @@
 ﻿namespace AccountManager.Application.DTOs.Responses;
 
-public record RecoveryResponse(bool IsRecovered);
+public sealed record RecoveryResponse(bool IsRecovered);

@@ -9,7 +9,7 @@ using AccountManager.Core.Results;
 
 namespace AccountManager.Application.UseCases;
 
-public class AccountRegistrationUseCase(
+public sealed class AccountRegistrationUseCase(
     IAccountCommandRepository accountCommandRepository,
     IAccountQueryRepository accountQueryRepository
 ) : IExecutable<Task<Result<RegisterResponse>>, RegisterRequest>

@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.Messaging;
 
 namespace AccountManager.Presentation.ViewModels;
 
-public partial class WindowViewModel :
+public sealed partial class WindowViewModel :
     ViewModelBase,
     IRecipient<AccountLoggedInMessage>,
     IRecipient<AccountLoggedOutMessage>

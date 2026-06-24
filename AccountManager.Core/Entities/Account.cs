@@ -4,7 +4,7 @@ using AccountManager.Core.ValueObjects;
 
 namespace AccountManager.Core.Entities;
 
-public class Account
+public sealed class Account
 {
     private Account(Email email, Password password, Role role)
     {

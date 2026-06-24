@@ -7,7 +7,7 @@ using AccountManager.Core.ValueObjects;
 
 namespace AccountManager.Application.UseCases;
 
-public class AccountRecoveryUseCase(
+public sealed class AccountRecoveryUseCase(
     IAccountQueryRepository accountQueryRepository,
     IAccountCommandRepository accountCommandRepository
 ) : IExecutable<Task<Result<RecoveryResponse>>, RecoveryRequest>

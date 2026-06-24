@@ -2,7 +2,7 @@
 
 namespace AccountManager.Presentation.DTOs;
 
-public record AccountLoggedIn(
+public sealed record AccountLoggedIn(
     string Email,
     string Password,
     Role Role

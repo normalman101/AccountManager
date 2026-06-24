@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 
 namespace AccountManager.Presentation.ViewModels.Pages.Gateway;
 
-public partial class MenuViewModel(
+public sealed partial class MenuViewModel(
     AccountAuthenticationUseCase accountAuthenticationUseCase,
     AccountRegistrationUseCase accountRegistrationUseCase,
     AccountRecoveryUseCase accountRecoveryUseCase

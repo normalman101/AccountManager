@@ -3,4 +3,4 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace AccountManager.Presentation.Messages;
 
-public class AccountLoggedOutMessage(AccountLoggedOut value) : ValueChangedMessage<AccountLoggedOut>(value);
+public sealed class AccountLoggedOutMessage(AccountLoggedOut value) : ValueChangedMessage<AccountLoggedOut>(value);

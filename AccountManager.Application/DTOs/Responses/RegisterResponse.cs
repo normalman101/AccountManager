@@ -1,3 +1,3 @@
 ﻿namespace AccountManager.Application.DTOs.Responses;
 
-public record RegisterResponse(bool IsRegistered);
+public sealed record RegisterResponse(bool IsRegistered);

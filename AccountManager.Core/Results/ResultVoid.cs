@@ -3,7 +3,7 @@ using AccountManager.Core.Errors;
 
 namespace AccountManager.Core.Results;
 
-public class ResultVoid
+public sealed class ResultVoid
 {
     private ResultVoid(bool isSuccess, Error error)
     {

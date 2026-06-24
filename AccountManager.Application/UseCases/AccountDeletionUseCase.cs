@@ -7,7 +7,7 @@ using AccountManager.Core.ValueObjects;
 
 namespace AccountManager.Application.UseCases;
 
-public class AccountDeletionUseCase(IAccountCommandRepository accountCommandRepository)
+public sealed class AccountDeletionUseCase(IAccountCommandRepository accountCommandRepository)
     : IExecutable<Task<Result<DeleteResponse>>, DeleteRequest>
 {
     public async Task<Result<DeleteResponse>> Execute(DeleteRequest request)

@@ -10,7 +10,7 @@ using CommunityToolkit.Mvvm.Messaging;
 
 namespace AccountManager.Presentation.ViewModels.Pages.Workspace;
 
-public partial class WorkspaceViewModel :
+public sealed partial class WorkspaceViewModel :
     ViewModelBase,
     IRecipient<PageMessage>
 {

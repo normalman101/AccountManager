@@ -1,3 +1,3 @@
 ﻿namespace AccountManager.Presentation.DTOs;
 
-public record AccountLoggedOut;
+public sealed record AccountLoggedOut;

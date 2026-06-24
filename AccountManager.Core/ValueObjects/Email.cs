@@ -1,10 +1,9 @@
-﻿using System;
-using AccountManager.Core.Errors;
+﻿using AccountManager.Core.Errors;
 using AccountManager.Core.Results;
 
 namespace AccountManager.Core.ValueObjects;
 
-public class Email
+public sealed class Email
 {
     private Email(string value)
     {

@@ -12,7 +12,7 @@ using Npgsql;
 
 namespace AccountManager.Infrastructure.Repositories;
 
-public class AccountQueryRepository(string connectionString) : IAccountQueryRepository
+public sealed class AccountQueryRepository(string connectionString) : IAccountQueryRepository
 {
     public async Task<Result<Account>> GetByEmail(Email email)
     {

@@ -6,7 +6,7 @@ using AccountManager.Application.Interfaces;
 
 namespace AccountManager.Application.UseCases;
 
-public class GetAllAccountsUseCase(IAccountQueryRepository accountQueryRepository)
+public sealed class GetAllAccountsUseCase(IAccountQueryRepository accountQueryRepository)
 {
     public async Task<IEnumerable<AccountDto>> Execute()
     {
